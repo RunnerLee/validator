@@ -96,7 +96,7 @@ class Validator
         $map = [];
         foreach ($ruleGroups as $field => $rules) {
             foreach (explode('|', $rules) as $rule) {
-                false === strpos(':', $rule) && $rule .= ':';
+                false === strpos($rule, ':') && $rule .= ':';
                 list($rule, $parameters) = explode(':', $rule, 2);
                 if (isset($map[$rule])) {
                     $rule = $map[$rule];
