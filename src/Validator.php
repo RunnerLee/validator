@@ -31,7 +31,7 @@ class Validator
     /**
      * @var array
      */
-    protected $forceRules = ['required'];
+    protected $forceRules = ['Required'];
 
     /**
      * Validator constructor.
@@ -93,10 +93,18 @@ class Validator
      */
     protected function parseRules(array $ruleGroups)
     {
+        $map = [];
         foreach ($ruleGroups as $field => $rules) {
             foreach (explode('|', $rules) as $rule) {
                 false === strpos(':', $rule) && $rule .= ':';
-                list($rule, $parameters) = explode(':', $rule);
+                list($rule, $parameters) = explode(':', $rule, 2);
+                if (isset($map[$rule])) {
+                    $rule = $map[$rule];
+                } else {
+                    $rule = $map[$rule] = implode('', array_map(function ($value) {
+                        return ucfirst($value);
+                    }, explode('_', $rule)));
+                }
                 $this->ruleGroups[$field][$rule] = explode(',', $parameters);
             }
         }
@@ -147,7 +155,7 @@ class Validator
      */
     protected function runValidateRule($field, $rule, array $parameters = [])
     {
-        return (bool)call_user_func([$this, 'validate' . ucfirst($rule)], $this->getField($field), $parameters);
+        return (bool)call_user_func([$this, "validate{$rule}"], $this->getField($field), $parameters);
     }
 
     /**
@@ -197,18 +205,7 @@ class Validator
      */
     protected function validateSize($value, array $parameters)
     {
-        switch (true) {
-            case is_array($value):
-                $value = count($value);
-                break;
-            case false !== $temp = filter_var($value, FILTER_VALIDATE_INT):
-                $value = $temp;
-                break;
-            default:
-                $value = strlen($value);
-        }
-
-        return $value === intval($parameters[0]);
+        return $this->getSize($value) === intval($parameters[0]);
     }
 
     /**
@@ -281,8 +278,116 @@ class Validator
         return is_array($value);
     }
 
+    /**
+     * @param $value
+     * @param array $parameteres
+     * @return bool
+     */
     protected function validateString($value, array $parameteres = [])
     {
         return is_string($value);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateNullable($value, array $parameters = [])
+    {
+        return true;
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateMin($value, array $parameters)
+    {
+        return $this->getSize($value) >= $parameters[0];
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateMax($value, array $parameters)
+    {
+        return $this->getSize($value) <= $parameters[0];
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateRange($value, array $parameters)
+    {
+        $size = $this->getSize($value);
+        if (isset($parameters[0])) {
+            if (isset($parameters[1])) {
+                return $size >= $parameters[0] && $size <= $parameters[1];
+            }
+            return $size >= $parameters[0];
+        }
+        return $size <= $parameters[1];
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateRegex($value, array $parameters)
+    {
+        return (bool)preg_match("#{$parameters[0]}#", $value);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateIn($value, array $parameters)
+    {
+        return in_array($value, $parameters);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateIp($value, array $parameters = [])
+    {
+        return false !== filter_var($value, FILTER_VALIDATE_IP);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateDateFormat($value, array $parameters)
+    {
+        return (bool)date_parse_from_format($value, $parameters[0])['error_count'];
+    }
+
+    /**
+     * @param $value
+     * @return int
+     */
+    protected function getSize($value)
+    {
+        switch (true) {
+            case is_array($value):
+                return count($value);
+            case false !== $temp = filter_var($value, FILTER_VALIDATE_INT):
+                return $temp;
+            default:
+                return strlen($value);
+        }
     }
 }
