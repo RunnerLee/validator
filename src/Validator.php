@@ -81,6 +81,14 @@ class Validator
     }
 
     /**
+     * @return array
+     */
+    public function data()
+    {
+        return $this->data;
+    }
+
+    /**
      * @param array $ruleGroups
      */
     protected function parseRules(array $ruleGroups)
