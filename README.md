@@ -1,3 +1,4 @@
 # Validator
 
-模范 Laravel 的 validation.
+模仿 Laravel 的 validation.
+
