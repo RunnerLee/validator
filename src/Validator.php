@@ -107,6 +107,7 @@ class Validator
                 $this->ruleGroups[$field][$rule] = explode(',', $parameters);
             }
         }
+        unset($map);
     }
 
     /**
@@ -384,6 +385,8 @@ class Validator
             case is_array($value):
                 return count($value);
             case false !== $temp = filter_var($value, FILTER_VALIDATE_INT):
+                return $temp;
+            case false !== $temp = filter_var($value, FILTER_VALIDATE_FLOAT):
                 return $temp;
             default:
                 return strlen($value);
