@@ -1,6 +1,8 @@
 stages:
   - test
 testing:
+  tags:
+    - shell
   stage: test
   script:
     - phpcs --standard=PSR2 --ignore=*/Tests/* ./src
