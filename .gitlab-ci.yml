@@ -1,0 +1,8 @@
+stages:
+  - test
+testing:
+  stage: test
+  script:
+    - phpcs --standard=PSR2 --ignore=*/Tests/* ./src
+    - composer install
+    - phpunit
