@@ -9,7 +9,7 @@
 use Runner\Validator\Validator;
 
 
-class ValidatorTest extends PHPUnit_Framework_TestCase
+class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testValidator()
