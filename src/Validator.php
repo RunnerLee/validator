@@ -104,7 +104,7 @@ class Validator
                         return ucfirst($value);
                     }, explode('_', $rule)));
                 }
-                $this->ruleGroups[$field][$rule] = explode(',', $parameters);
+                $this->ruleGroups[$field][$rule] = ('' === $parameters ? [] : explode(',', $parameters));
             }
         }
         unset($map);
@@ -165,7 +165,7 @@ class Validator
      */
     protected function validateAccept($value, array $parameters = [])
     {
-        return in_array(strtolower($value), ['yes', 'on', '1', 1, true]);
+        return in_array(strtolower($value), ['yes', 'on', '1', 1, true], true);
     }
 
     /**
@@ -225,7 +225,7 @@ class Validator
      */
     protected function validateBoolean($value, array $parameters = [])
     {
-        return in_array($value, [true, false, 0, 1, '0', '1']);
+        return in_array($value, [true, false, 0, 1, '0', '1'], true);
     }
 
     /**
@@ -326,13 +326,22 @@ class Validator
     protected function validateRange($value, array $parameters)
     {
         $size = $this->getSize($value);
-        if (isset($parameters[0])) {
-            if (isset($parameters[1])) {
-                return $size >= $parameters[0] && $size <= $parameters[1];
-            }
-            return $size >= $parameters[0];
+        if (!isset($parameters[0])) {
+            return false;
         }
-        return $size <= $parameters[1];
+        if (isset($parameters[1])) {
+            if ('' === $parameters[0]) {
+                if ('' === $parameters[1]) {
+                    return false;
+                }
+                return $size <= $parameters[1];
+            }
+            if ('' === $parameters[1]) {
+                return $size >= $parameters[0];
+            }
+            return $size >= $parameters[0] && $size <= $parameters[1];
+        }
+        return '' === $parameters[0] ? false : ($size >= $parameters[0]);
     }
 
     /**
@@ -352,7 +361,7 @@ class Validator
      */
     protected function validateIn($value, array $parameters)
     {
-        return in_array($value, $parameters);
+        return in_array($value, $parameters, true);
     }
 
     /**
@@ -372,7 +381,7 @@ class Validator
      */
     protected function validateDateFormat($value, array $parameters)
     {
-        return (bool)date_parse_from_format($value, $parameters[0])['error_count'];
+        return !(bool)date_parse_from_format($parameters[0], $value)['error_count'];
     }
 
     /**
