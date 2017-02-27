@@ -386,6 +386,16 @@ class Validator
 
     /**
      * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateJson($value, array $parameters)
+    {
+        return is_object(json_decode($value));
+    }
+
+    /**
+     * @param $value
      * @return int
      */
     protected function getSize($value)

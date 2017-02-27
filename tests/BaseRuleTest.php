@@ -4,8 +4,7 @@
  * @email: runnerleer@gmail.com
  * @time: 17-2-24 17:40
  */
-
-use Runner\Validator\Validator;
+require __DIR__ . '/ValidatorTester.php';
 
 class BaseRuleTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,16 +13,7 @@ class BaseRuleTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->validator = new class(['password' => '123456', 'password_confirm' => '123456'], []) extends Validator {
-            public function callValidateRule()
-            {
-                $parameters = func_get_args();
-                $funcName = array_shift($parameters);
-                $value = array_shift($parameters);
-
-                return call_user_func([$this, $funcName], $value, $parameters);
-            }
-        };
+        $this->validator = new ValidatorTester(['password' => '123456', 'password_confirm' => '123456'], []);
     }
 
     public function testSize()
@@ -163,6 +153,9 @@ class BaseRuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(false, $this->validator->callValidateRule('validateDateFormat', '1995-09-06', 'H:i:s'));
     }
 
-
-
+    public function testJson()
+    {
+        $this->assertSame(true, $this->validator->callValidateRule('validateJson', '{}'));
+        $this->assertSame(false, $this->validator->callValidateRule('validateJson', 'runnerlee'));
+    }
 }
