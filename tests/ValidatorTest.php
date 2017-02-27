@@ -47,4 +47,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($data, $validator->data());
     }
 
+
+    public function testMessage()
+    {
+        $data = [
+            'data' => 'demo',
+        ];
+        $rules = [
+            'data' => 'size:3',
+        ];
+        $validator = new Validator($data, $rules);
+
+        $this->assertSame(false, $validator->validate());
+        $this->assertSame("data 's size must be 3", $validator->messages()['data']['Size']);
+    }
+
 }

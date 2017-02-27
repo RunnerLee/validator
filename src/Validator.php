@@ -34,6 +34,11 @@ class Validator
     protected $forceRules = ['Required'];
 
     /**
+     * @var array
+     */
+    protected $messageTemplates = [];
+
+    /**
      * Validator constructor.
      * @param array $data
      * @param array $ruleGroups
@@ -42,6 +47,7 @@ class Validator
     {
         $this->data = $data;
         $this->parseRules($ruleGroups);
+        $this->messageTemplates = require __DIR__ . '/message.php';
     }
 
     /**
@@ -53,11 +59,13 @@ class Validator
             if ($this->hasField($field)) {
                 foreach ($rules as $rule => $parameters) {
                     if (!$this->runValidateRule($field, $rule, $parameters)) {
-                        $this->messages[$field][] = $rule;
+                        $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, $parameters);
                     }
                 }
             } elseif ($forceRules = array_intersect($this->forceRules, array_keys($rules))) {
-                $this->messages[$field] = $forceRules;
+                foreach ($forceRules as $rule) {
+                    $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, []);
+                }
             }
         }
 
@@ -156,6 +164,21 @@ class Validator
     protected function runValidateRule($field, $rule, array $parameters = [])
     {
         return (bool)call_user_func([$this, "validate{$rule}"], $this->getField($field), $parameters);
+    }
+
+    /**
+     * @param $rule
+     * @param $field
+     * @param array $parameters
+     * @return string
+     */
+    protected function buildFailMessage($rule, $field, array $parameters = [])
+    {
+        if (!isset($this->messageTemplates[$rule])) {
+            return "{$field} field check failed";
+        }
+        array_unshift($parameters, "{$field} {$this->messageTemplates[$rule]}");
+        return call_user_func_array('sprintf', $parameters);
     }
 
     /**
