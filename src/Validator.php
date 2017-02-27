@@ -412,6 +412,26 @@ class Validator
      * @param array $parameters
      * @return bool
      */
+    protected function validateDateBefore($value, array $parameters)
+    {
+        return strtotime($value) < strtotime($parameters[0]);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateDateAfter($value, array $parameters)
+    {
+        return strtotime($value) > strtotime($parameters[0]);
+    }
+
+    /**
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
     protected function validateJson($value, array $parameters)
     {
         return is_object(json_decode($value));
