@@ -27,6 +27,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'confirm' => 'hello world',
             'date' => '1995-09-06',
             'email' => 'runnerleer@gmail.com',
+            'numeric_string' => '123456',
         ];
         $rules = [
             'data' => 'size:4',
@@ -40,6 +41,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'confirm' => 'confirm:string',
             'date' => 'date',
             'email' => 'email',
+            'numeric_string' => 'string|size:6',
         ];
         $validator = new Validator($data, $rules);
 

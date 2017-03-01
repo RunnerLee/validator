@@ -163,7 +163,7 @@ class Validator
      */
     protected function runValidateRule($field, $rule, array $parameters = [])
     {
-        return (bool)call_user_func([$this, "validate{$rule}"], $this->getField($field), $parameters);
+        return (bool)call_user_func([$this, "validate{$rule}"], $field, $this->getField($field), $parameters);
     }
 
     /**
@@ -182,173 +182,190 @@ class Validator
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateAccept($value, array $parameters = [])
+    protected function validateAccept($field, $value, array $parameters = [])
     {
         return in_array(strtolower($value), ['yes', 'on', '1', 1, true], true);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateNumeric($value, array $parameters = [])
+    protected function validateNumeric($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_INT) || false !== filter_var($value, FILTER_VALIDATE_FLOAT);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateInteger($value, array $parameters = [])
+    protected function validateInteger($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_INT);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateFloat($value, array $parameters = [])
+    protected function validateFloat($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_FLOAT);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateSize($value, array $parameters)
+    protected function validateSize($field, $value, array $parameters)
     {
-        return $this->getSize($value) === intval($parameters[0]);
+        return $this->getSize($field, $value) === (int)$parameters[0];
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateUrl($value, array $parameters = [])
+    protected function validateUrl($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_URL);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateBoolean($value, array $parameters = [])
+    protected function validateBoolean($field, $value, array $parameters = [])
     {
         return in_array($value, [true, false, 0, 1, '0', '1'], true);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateConfirm($value, array $parameters)
+    protected function validateConfirm($field, $value, array $parameters)
     {
         return $value === $this->data[$parameters[0]];
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateDate($value, array $parameters = [])
+    protected function validateDate($field, $value, array $parameters = [])
     {
         return false !== strtotime($value);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateEmail($value, array $parameters = [])
+    protected function validateEmail($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_EMAIL);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateRequired($value, array $parameters = [])
+    protected function validateRequired($field, $value, array $parameters = [])
     {
         return !is_null($value);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateArray($value, array $parameters = [])
+    protected function validateArray($field, $value, array $parameters = [])
     {
         return is_array($value);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameteres
      * @return bool
      */
-    protected function validateString($value, array $parameteres = [])
+    protected function validateString($field, $value, array $parameteres = [])
     {
         return is_string($value);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateNullable($value, array $parameters = [])
+    protected function validateNullable($field, $value, array $parameters = [])
     {
         return true;
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateMin($value, array $parameters)
+    protected function validateMin($field, $value, array $parameters)
     {
-        return $this->getSize($value) >= $parameters[0];
+        return $this->getSize($field, $value) >= $parameters[0];
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateMax($value, array $parameters)
+    protected function validateMax($field, $value, array $parameters)
     {
-        return $this->getSize($value) <= $parameters[0];
+        return $this->getSize($field, $value) <= $parameters[0];
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateRange($value, array $parameters)
+    protected function validateRange($field, $value, array $parameters)
     {
-        $size = $this->getSize($value);
+        $size = $this->getSize($field, $value);
         if (!isset($parameters[0])) {
             return false;
         }
@@ -368,82 +385,92 @@ class Validator
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateRegex($value, array $parameters)
+    protected function validateRegex($field, $value, array $parameters)
     {
         return (bool)preg_match("#{$parameters[0]}#", $value);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateIn($value, array $parameters)
+    protected function validateIn($field, $value, array $parameters)
     {
         return in_array($value, $parameters, true);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateIp($value, array $parameters = [])
+    protected function validateIp($field, $value, array $parameters = [])
     {
         return false !== filter_var($value, FILTER_VALIDATE_IP);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateDateFormat($value, array $parameters)
+    protected function validateDateFormat($field, $value, array $parameters)
     {
         return !(bool)date_parse_from_format($parameters[0], $value)['error_count'];
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateDateBefore($value, array $parameters)
+    protected function validateDateBefore($field, $value, array $parameters)
     {
         return strtotime($value) < strtotime($parameters[0]);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateDateAfter($value, array $parameters)
+    protected function validateDateAfter($field, $value, array $parameters)
     {
         return strtotime($value) > strtotime($parameters[0]);
     }
 
     /**
+     * @param $field
      * @param $value
      * @param array $parameters
      * @return bool
      */
-    protected function validateJson($value, array $parameters)
+    protected function validateJson($field, $value, array $parameters)
     {
         return is_object(json_decode($value));
     }
 
     /**
+     * @param $field
      * @param $value
-     * @return int
+     * @return int|mixed
      */
-    protected function getSize($value)
+    protected function getSize($field, $value)
     {
         switch (true) {
+            case (isset($this->ruleGroups[$field]['String']) && is_string($value)):
+                return strlen($value);
             case is_array($value):
                 return count($value);
             case false !== $temp = filter_var($value, FILTER_VALIDATE_INT):

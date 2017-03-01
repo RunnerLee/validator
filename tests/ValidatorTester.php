@@ -10,8 +10,9 @@ class ValidatorTester extends \Runner\Validator\Validator
     {
         $parameters = func_get_args();
         $funcName = array_shift($parameters);
+        $field = array_shift($parameters);
         $value = array_shift($parameters);
 
-        return call_user_func([$this, $funcName], $value, $parameters);
+        return call_user_func([$this, $funcName], $field, $value, $parameters);
     }
 }
