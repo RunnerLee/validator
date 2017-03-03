@@ -57,8 +57,9 @@ class Validator
     {
         foreach ($this->ruleGroups as $field => $rules) {
             if ($this->hasField($field)) {
+                $value = $this->getField($field);
                 foreach ($rules as $rule => $parameters) {
-                    if (!$this->runValidateRule($field, $rule, $parameters)) {
+                    if (!$this->runValidateRule($field, $value, $rule, $parameters)) {
                         $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, $parameters);
                     }
                 }
@@ -157,13 +158,14 @@ class Validator
 
     /**
      * @param $field
+     * @param $value
      * @param $rule
      * @param array $parameters
      * @return bool
      */
-    protected function runValidateRule($field, $rule, array $parameters = [])
+    protected function runValidateRule($field, $value, $rule, array $parameters = [])
     {
-        return (bool)call_user_func([$this, "validate{$rule}"], $field, $this->getField($field), $parameters);
+        return (bool)call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
     }
 
     /**
