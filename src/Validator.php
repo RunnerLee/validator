@@ -310,6 +310,54 @@ class Validator
      * @param array $parameters
      * @return bool
      */
+    protected function validateRequiredWith($field, $value, array $parameters)
+    {
+        return !is_null($value) || !isset($this->data[$parameters[0]]);
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateRequiredWithout($field, $value, array $parameters)
+    {
+        return isset($this->data[$parameters[0]] || !is_null($value));
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateRequiredIf($field, $value, array $parameters)
+    {
+        $otherField = array_shift($parameters);
+
+        return isset($this->data[$otherField]) && false !== array_search($this->data[$otherField], $parameters);
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
+    protected function validateRequiredUnless($field, $value, array $parameters)
+    {
+        $otherField = array_shift($parameters);
+
+        return !isset($this->data[$otherField]) || false === array_search($this->data[$otherField], $parameters);
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     * @return bool
+     */
     protected function validateArray($field, $value, array $parameters = [])
     {
         return is_array($value);
