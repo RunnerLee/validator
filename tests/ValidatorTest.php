@@ -28,6 +28,8 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'date' => '1995-09-06',
             'email' => 'runnerleer@gmail.com',
             'numeric_string' => '123456',
+            'is_blocked' => 'no',
+            'block_reason' => '123',
         ];
         $rules = [
             'data' => 'size:4',
@@ -42,6 +44,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'date' => 'date',
             'email' => 'email',
             'numeric_string' => 'string|size:6',
+            'block_reason' => 'string|required_with:is_blocked',
         ];
         $validator = new Validator($data, $rules);
 

@@ -31,7 +31,7 @@ class Validator
     /**
      * @var array
      */
-    protected $forceRules = ['Required'];
+    protected $forceRules = ['Required', 'RequiredIf', 'RequiredWith', 'RequiredUnless', 'RequiredWithout'];
 
     /**
      * @var array
@@ -64,8 +64,11 @@ class Validator
                     }
                 }
             } elseif ($forceRules = array_intersect($this->forceRules, array_keys($rules))) {
+                $value = null;
                 foreach ($forceRules as $rule) {
-                    $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, []);
+                    if (!$this->runValidateRule($field, null, $rule, $rules[$rule])) {
+                        $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, $rules[$rule]);
+                    }
                 }
             }
         }
@@ -184,6 +187,8 @@ class Validator
     }
 
     /**
+     * 接受
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -195,6 +200,8 @@ class Validator
     }
 
     /**
+     * 数字
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -206,6 +213,8 @@ class Validator
     }
 
     /**
+     * 整型
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -217,6 +226,8 @@ class Validator
     }
 
     /**
+     * 浮点型
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -228,6 +239,8 @@ class Validator
     }
 
     /**
+     * 值的大小, 字符串为长度, 数组为长度
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -239,6 +252,8 @@ class Validator
     }
 
     /**
+     * 链接
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -250,6 +265,8 @@ class Validator
     }
 
     /**
+     * 布尔值
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -272,6 +289,8 @@ class Validator
     }
 
     /**
+     * 时间戳
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -283,6 +302,8 @@ class Validator
     }
 
     /**
+     * 邮箱地址
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -294,6 +315,8 @@ class Validator
     }
 
     /**
+     * 必须有值且非null
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -305,6 +328,8 @@ class Validator
     }
 
     /**
+     * 指定字段有值时必填
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -312,10 +337,12 @@ class Validator
      */
     protected function validateRequiredWith($field, $value, array $parameters)
     {
-        return !is_null($value) || isset($this->data[$parameters[0]]);
+        return !is_null($value) || !isset($this->data[$parameters[0]]);
     }
 
     /**
+     * 指定字段无值时必填
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -323,10 +350,12 @@ class Validator
      */
     protected function validateRequiredWithout($field, $value, array $parameters)
     {
-        return !is_null($value) || !isset($this->data[$parameters[0]]);
+        return !isset($this->data[$parameters[0]]) || !is_null($value);
     }
 
     /**
+     * 指定字段值在指定选项内必填
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -336,10 +365,12 @@ class Validator
     {
         $otherField = array_shift($parameters);
 
-        return isset($this->data[$otherField]) && false !== array_search($this->data[$otherField], $parameters);
+        return !is_null($value) || (!isset($this->data[$otherField]) || false === array_search($this->data[$otherField], $parameters));
     }
 
     /**
+     * 指定字段值不在指定选项内必填
+     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -349,7 +380,7 @@ class Validator
     {
         $otherField = array_shift($parameters);
 
-        return !isset($this->data[$otherField]) || false === array_search($this->data[$otherField], $parameters);
+        return !is_null($value) || (!isset($this->data[$otherField]) || false !== array_search($this->data[$otherField], $parameters));
     }
 
     /**
