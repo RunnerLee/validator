@@ -312,7 +312,7 @@ class Validator
      */
     protected function validateRequiredWith($field, $value, array $parameters)
     {
-        return !is_null($value) || !isset($this->data[$parameters[0]]);
+        return !is_null($value) || isset($this->data[$parameters[0]]);
     }
 
     /**
@@ -323,7 +323,7 @@ class Validator
      */
     protected function validateRequiredWithout($field, $value, array $parameters)
     {
-        return isset($this->data[$parameters[0]] || !is_null($value));
+        return !is_null($value) || !isset($this->data[$parameters[0]]);
     }
 
     /**
