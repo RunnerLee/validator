@@ -4,54 +4,49 @@
  * @email: runnerleer@gmail.com
  * @time: 17-2-21 11:13
  */
-
-
 use Runner\Validator\Validator;
-
 
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
-
     public function testValidator()
     {
         $data = [
-            'data' => 'demo',
-            'url' => 'http://runnerlee.com',
+            'data'  => 'demo',
+            'url'   => 'http://runnerlee.com',
             'array' => [
                 'hello' => '1.1',
             ],
-            'accept' => 'on',
-            'integer' => '1',
-            'boolean' => 0,
-            'string' => 'hello world',
-            'confirm' => 'hello world',
-            'date' => '1995-09-06',
-            'email' => 'runnerleer@gmail.com',
+            'accept'         => 'on',
+            'integer'        => '1',
+            'boolean'        => 0,
+            'string'         => 'hello world',
+            'confirm'        => 'hello world',
+            'date'           => '1995-09-06',
+            'email'          => 'runnerleer@gmail.com',
             'numeric_string' => '123456',
-            'is_blocked' => 'no',
-            'block_reason' => '123',
+            'is_blocked'     => 'no',
+            'block_reason'   => '123',
         ];
         $rules = [
-            'data' => 'size:4',
-            'url' => 'url',
-            'array' => 'required|array',
-            'array.hello' => 'numeric',
-            'accept' => 'accept',
-            'integer' => 'integer',
-            'boolean' => 'boolean',
-            'string' => 'string',
-            'confirm' => 'confirm:string',
-            'date' => 'date',
-            'email' => 'email',
+            'data'           => 'size:4',
+            'url'            => 'url',
+            'array'          => 'required|array',
+            'array.hello'    => 'numeric',
+            'accept'         => 'accept',
+            'integer'        => 'integer',
+            'boolean'        => 'boolean',
+            'string'         => 'string',
+            'confirm'        => 'confirm:string',
+            'date'           => 'date',
+            'email'          => 'email',
             'numeric_string' => 'string|size:6',
-            'block_reason' => 'string|required_with:is_blocked',
+            'block_reason'   => 'string|required_with:is_blocked',
         ];
         $validator = new Validator($data, $rules);
 
         $this->assertSame(true, $validator->validate());
         $this->assertSame($data, $validator->data());
     }
-
 
     public function testMessage()
     {
@@ -66,5 +61,4 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(false, $validator->validate());
         $this->assertSame("data 's size must be 3", $validator->messages()['data']['Size']);
     }
-
 }
