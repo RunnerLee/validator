@@ -4,15 +4,14 @@
  * @email: runnerleer@gmail.com
  * @time: 17-2-20 15:22
  */
+
 namespace Runner\Validator;
 
 /**
- * Class Validator
- * @package Runner\Validation
+ * Class Validator.
  */
 class Validator
 {
-
     /**
      * @var array
      */
@@ -40,6 +39,7 @@ class Validator
 
     /**
      * Validator constructor.
+     *
      * @param array $data
      * @param array $ruleGroups
      */
@@ -47,7 +47,7 @@ class Validator
     {
         $this->data = $data;
         $this->parseRules($ruleGroups);
-        $this->messageTemplates = require __DIR__ . '/message.php';
+        $this->messageTemplates = require __DIR__.'/message.php';
     }
 
     /**
@@ -73,7 +73,7 @@ class Validator
             }
         }
 
-        return !(bool)$this->messages;
+        return !(bool) $this->messages;
     }
 
     /**
@@ -108,7 +108,7 @@ class Validator
         $map = [];
         foreach ($ruleGroups as $field => $rules) {
             foreach (explode('|', $rules) as $rule) {
-                list($rule, $parameters) = explode(':', (false === strpos($rule, ':') ? ($rule . ':') : $rule), 2);
+                list($rule, $parameters) = explode(':', (false === strpos($rule, ':') ? ($rule.':') : $rule), 2);
                 if (isset($map[$rule])) {
                     $rule = $map[$rule];
                 } else {
@@ -124,6 +124,7 @@ class Validator
 
     /**
      * @param string $field
+     *
      * @return bool
      */
     protected function hasField($field)
@@ -141,11 +142,13 @@ class Validator
             }
             $value = $value[$item];
         }
+
         return true;
     }
 
     /**
      * @param string $field
+     *
      * @return mixed
      */
     protected function getField($field)
@@ -156,6 +159,7 @@ class Validator
         foreach ($field as $item) {
             $value = $value[$item];
         }
+
         return $value;
     }
 
@@ -164,17 +168,19 @@ class Validator
      * @param $value
      * @param $rule
      * @param array $parameters
+     *
      * @return bool
      */
     protected function runValidateRule($field, $value, $rule, array $parameters = [])
     {
-        return (bool)call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
+        return (bool) call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
     }
 
     /**
      * @param $rule
      * @param $field
      * @param array $parameters
+     *
      * @return string
      */
     protected function buildFailMessage($rule, $field, array $parameters = [])
@@ -183,15 +189,17 @@ class Validator
             return "{$field} field check failed";
         }
         array_unshift($parameters, "{$field} {$this->messageTemplates[$rule]}");
+
         return call_user_func_array('sprintf', $parameters);
     }
 
     /**
-     * 接受
+     * 接受.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateAccept($field, $value, array $parameters = [])
@@ -200,11 +208,12 @@ class Validator
     }
 
     /**
-     * 数字
+     * 数字.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateNumeric($field, $value, array $parameters = [])
@@ -213,11 +222,12 @@ class Validator
     }
 
     /**
-     * 整型
+     * 整型.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateInteger($field, $value, array $parameters = [])
@@ -226,11 +236,12 @@ class Validator
     }
 
     /**
-     * 浮点型
+     * 浮点型.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateFloat($field, $value, array $parameters = [])
@@ -239,24 +250,26 @@ class Validator
     }
 
     /**
-     * 值的大小, 字符串为长度, 数组为长度
+     * 值的大小, 字符串为长度, 数组为长度.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateSize($field, $value, array $parameters)
     {
-        return $this->getSize($field, $value) === (int)$parameters[0];
+        return $this->getSize($field, $value) === (int) $parameters[0];
     }
 
     /**
-     * 链接
+     * 链接.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateUrl($field, $value, array $parameters = [])
@@ -270,6 +283,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateBoolean($field, $value, array $parameters = [])
@@ -281,6 +295,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateConfirm($field, $value, array $parameters)
@@ -289,11 +304,12 @@ class Validator
     }
 
     /**
-     * 时间戳
+     * 时间戳.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateDate($field, $value, array $parameters = [])
@@ -307,6 +323,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateEmail($field, $value, array $parameters = [])
@@ -315,11 +332,12 @@ class Validator
     }
 
     /**
-     * 必须有值且非null
+     * 必须有值且非null.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRequired($field, $value, array $parameters = [])
@@ -328,11 +346,12 @@ class Validator
     }
 
     /**
-     * 指定字段有值时必填
+     * 指定字段有值时必填.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRequiredWith($field, $value, array $parameters)
@@ -341,11 +360,12 @@ class Validator
     }
 
     /**
-     * 指定字段无值时必填
+     * 指定字段无值时必填.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRequiredWithout($field, $value, array $parameters)
@@ -354,11 +374,12 @@ class Validator
     }
 
     /**
-     * 指定字段值在指定选项内必填
+     * 指定字段值在指定选项内必填.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRequiredIf($field, $value, array $parameters)
@@ -369,11 +390,12 @@ class Validator
     }
 
     /**
-     * 指定字段值不在指定选项内必填
+     * 指定字段值不在指定选项内必填.
      *
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRequiredUnless($field, $value, array $parameters)
@@ -387,6 +409,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateArray($field, $value, array $parameters = [])
@@ -398,6 +421,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameteres
+     *
      * @return bool
      */
     protected function validateString($field, $value, array $parameteres = [])
@@ -409,6 +433,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateNullable($field, $value, array $parameters = [])
@@ -420,6 +445,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateMin($field, $value, array $parameters)
@@ -431,6 +457,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateMax($field, $value, array $parameters)
@@ -442,6 +469,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRange($field, $value, array $parameters)
@@ -455,13 +483,16 @@ class Validator
                 if ('' === $parameters[1]) {
                     return false;
                 }
+
                 return $size <= $parameters[1];
             }
             if ('' === $parameters[1]) {
                 return $size >= $parameters[0];
             }
+
             return $size >= $parameters[0] && $size <= $parameters[1];
         }
+
         return '' === $parameters[0] ? false : ($size >= $parameters[0]);
     }
 
@@ -469,17 +500,19 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateRegex($field, $value, array $parameters)
     {
-        return (bool)preg_match("#{$parameters[0]}#", $value);
+        return (bool) preg_match("#{$parameters[0]}#", $value);
     }
 
     /**
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateIn($field, $value, array $parameters)
@@ -491,6 +524,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateIp($field, $value, array $parameters = [])
@@ -502,17 +536,19 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateDateFormat($field, $value, array $parameters)
     {
-        return !(bool)date_parse_from_format($parameters[0], $value)['error_count'];
+        return !(bool) date_parse_from_format($parameters[0], $value)['error_count'];
     }
 
     /**
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateDateBefore($field, $value, array $parameters)
@@ -524,6 +560,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateDateAfter($field, $value, array $parameters)
@@ -535,6 +572,7 @@ class Validator
      * @param $field
      * @param $value
      * @param array $parameters
+     *
      * @return bool
      */
     protected function validateJson($field, $value, array $parameters)
@@ -545,12 +583,13 @@ class Validator
     /**
      * @param $field
      * @param $value
+     *
      * @return int|mixed
      */
     protected function getSize($field, $value)
     {
         switch (true) {
-            case (isset($this->ruleGroups[$field]['String']) && is_string($value)):
+            case isset($this->ruleGroups[$field]['String']) && is_string($value):
                 return strlen($value);
             case is_array($value):
                 return count($value);

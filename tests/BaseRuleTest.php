@@ -4,11 +4,10 @@
  * @email: runnerleer@gmail.com
  * @time: 17-2-24 17:40
  */
-require __DIR__ . '/ValidatorTester.php';
+require __DIR__.'/ValidatorTester.php';
 
 class BaseRuleTest extends \PHPUnit_Framework_TestCase
 {
-
     protected $validator;
 
     public function setUp()
@@ -21,6 +20,7 @@ class BaseRuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(true, $this->validator->callValidateRule('validateSize', '', 'a', 1));
         $this->assertSame(false, $this->validator->callValidateRule('validateSize', '', 'a', 2));
     }
+
 //
 //    public function testAccept()
 //    {
