@@ -202,9 +202,11 @@ class Validator
             if ($callback instanceof Closure) {
                 $callback = $callback->bindTo($this);
             }
-            return (bool)call_user_func($callback, $field, $value, $parameters);
+
+            return (bool) call_user_func($callback, $field, $value, $parameters);
         }
-        return (bool)call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
+
+        return (bool) call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
     }
 
     /**
