@@ -6,8 +6,35 @@
 
 [RunnerLee/validation](https://github.com/RunnerLee/validation)
 
-## TODO
-- 支持自定义规则
+## 使用
+```
+
+use Runner\Validator\Validator;
+
+增加规则扩展
+Validator::addExtension(
+    'channel',
+    function ($field, $value, array $parameters = []) {
+        return false !== array_search($value, ['google', 'bing']);
+    },
+    false
+);
+
+$data = [
+    'blog' => 'https://github.com/RunnerLee',
+];
+$rule = [
+    'blog' => 'required|url',
+];
+$validator = new Validator($data, $rule);
+
+var_dump($validator->validate()); // output: true
+
+// 获取错误消息
+$validator->messages();
+```
+
+
 
 ## 参考:
 [https://github.com/vlucas/valitron](https://github.com/vlucas/valitron)

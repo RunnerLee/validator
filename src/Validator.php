@@ -7,6 +7,8 @@
 
 namespace Runner\Validator;
 
+use Closure;
+
 /**
  * Class Validator.
  */
@@ -30,12 +32,14 @@ class Validator
     /**
      * @var array
      */
-    protected $forceRules = ['Required', 'RequiredIf', 'RequiredWith', 'RequiredUnless', 'RequiredWithout'];
+    protected static $forceRules = ['Required', 'RequiredIf', 'RequiredWith', 'RequiredUnless', 'RequiredWithout'];
 
     /**
      * @var array
      */
     protected $messageTemplates = [];
+
+    protected static $extensions = [];
 
     /**
      * Validator constructor.
@@ -48,6 +52,15 @@ class Validator
         $this->data = $data;
         $this->parseRules($ruleGroups);
         $this->messageTemplates = require __DIR__.'/message.php';
+    }
+
+    public static function addExtension($name, $callback, $isForce = false)
+    {
+        $name = self::formatRuleName($name);
+
+        self::$extensions[$name] = $callback;
+
+        $isForce && self::$forceRules[] = $name;
     }
 
     /**
@@ -63,7 +76,7 @@ class Validator
                         $this->messages[$field][$rule] = $this->buildFailMessage($rule, $field, $parameters);
                     }
                 }
-            } elseif ($forceRules = array_intersect($this->forceRules, array_keys($rules))) {
+            } elseif ($forceRules = array_intersect(self::$forceRules, array_keys($rules))) {
                 $value = null;
                 foreach ($forceRules as $rule) {
                     if (!$this->runValidateRule($field, null, $rule, $rules[$rule])) {
@@ -112,14 +125,25 @@ class Validator
                 if (isset($map[$rule])) {
                     $rule = $map[$rule];
                 } else {
-                    $rule = $map[$rule] = implode('', array_map(function ($value) {
-                        return ucfirst($value);
-                    }, explode('_', $rule)));
+                    $rule = $map[$rule] = self::formatRuleName($rule);
                 }
                 $this->ruleGroups[$field][$rule] = ('' === $parameters ? [] : explode(',', $parameters));
             }
         }
         unset($map);
+    }
+
+    protected static function formatRuleName($name)
+    {
+        return implode(
+            '',
+            array_map(
+                function ($value) {
+                    return ucfirst($value);
+                },
+                explode('_', $name)
+            )
+        );
     }
 
     /**
@@ -173,7 +197,14 @@ class Validator
      */
     protected function runValidateRule($field, $value, $rule, array $parameters = [])
     {
-        return (bool) call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
+        if (array_key_exists($rule, self::$extensions)) {
+            $callback = self::$extensions[$rule];
+            if ($callback instanceof Closure) {
+                $callback = $callback->bindTo($this);
+            }
+            return (bool)call_user_func($callback, $field, $value, $parameters);
+        }
+        return (bool)call_user_func([$this, "validate{$rule}"], $field, $value, $parameters);
     }
 
     /**

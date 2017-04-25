@@ -26,6 +26,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'numeric_string' => '123456',
             'is_blocked'     => 'no',
             'block_reason'   => '123',
+            'channel'        => 'google',
         ];
         $rules = [
             'data'           => 'size:4',
@@ -41,7 +42,19 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'email'          => 'email',
             'numeric_string' => 'string|size:6',
             'block_reason'   => 'string|required_with:is_blocked',
+            'channel'        => 'required|channel_range',
         ];
+
+        $self = $this;
+
+        Validator::addExtension('channel_range', function ($field, $value, array $parameters = []) use ($self) {
+            $self->assertArrayHasKey('data', $this->data());
+            $self->assertArrayHasKey('url', $this->data());
+            $self->assertArrayHasKey('array', $this->data());
+
+            return false !== array_search($value, ['google', 'bing']);
+        });
+
         $validator = new Validator($data, $rules);
 
         $this->assertSame(true, $validator->validate());
