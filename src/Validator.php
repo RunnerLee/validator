@@ -17,12 +17,12 @@ class Validator
     /**
      * @var array
      */
-    protected $data;
+    protected $data = [];
 
     /**
      * @var array
      */
-    protected $ruleGroups;
+    protected $ruleGroups = [];
 
     /**
      * @var array
