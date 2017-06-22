@@ -610,7 +610,7 @@ class Validator
      */
     protected function validateJson($field, $value, array $parameters)
     {
-        return is_object(json_decode($value));
+        return is_array(json_decode($value, true));
     }
 
     /**
