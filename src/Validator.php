@@ -538,7 +538,7 @@ class Validator
      */
     protected function validateRegex($field, $value, array $parameters)
     {
-        return (bool) preg_match("#{$parameters[0]}#", $value);
+        return (bool) preg_match($parameters[0], $value);
     }
 
     /**
