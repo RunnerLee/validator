@@ -227,8 +227,6 @@ class Validator
     }
 
     /**
-     * 接受.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -241,8 +239,6 @@ class Validator
     }
 
     /**
-     * 数字.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -255,8 +251,6 @@ class Validator
     }
 
     /**
-     * 整型.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -269,8 +263,6 @@ class Validator
     }
 
     /**
-     * 浮点型.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -283,8 +275,6 @@ class Validator
     }
 
     /**
-     * 值的大小, 字符串为长度, 数组为长度.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -297,8 +287,6 @@ class Validator
     }
 
     /**
-     * 链接.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -311,8 +299,6 @@ class Validator
     }
 
     /**
-     * 布尔值
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -337,8 +323,6 @@ class Validator
     }
 
     /**
-     * 时间戳.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -365,9 +349,6 @@ class Validator
     }
 
     /**
-     * �
-     * 须有值且非null.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -380,9 +361,6 @@ class Validator
     }
 
     /**
-     * 指定字段有值时�
-     * 填.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -395,9 +373,6 @@ class Validator
     }
 
     /**
-     * 指定字段无值时�
-     * 填.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -410,10 +385,6 @@ class Validator
     }
 
     /**
-     * 指定字段值在指定选项�
-     * �
-     * 填.
-     *
      * @param $field
      * @param $value
      * @param array $parameters
@@ -428,8 +399,8 @@ class Validator
     }
 
     /**
-     * 指定字段值不在指定选项�
-     * �
+     * 指定字段值不在指定选项�
+     * �
      * 填.
      *
      * @param $field
