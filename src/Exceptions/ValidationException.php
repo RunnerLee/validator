@@ -9,6 +9,6 @@ namespace Runner\Validator\Exceptions;
 
 use RuntimeException;
 
-class ValidationExceptions extends RuntimeException
+class ValidationException extends RuntimeException
 {
 }
