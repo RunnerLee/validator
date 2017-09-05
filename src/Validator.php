@@ -454,7 +454,6 @@ class Validator
         return isset($this->data[$otherField]) && $value != $this->data[$otherField];
     }
 
-
     /**
      * @param $field
      * @param $value
