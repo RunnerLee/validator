@@ -399,9 +399,6 @@ class Validator
     }
 
     /**
-     * 指定字段值不在指定选项�
-     * �
-     * 填.
      *
      * @param $field
      * @param $value
@@ -589,6 +586,20 @@ class Validator
     protected function validateJson($field, $value, array $parameters)
     {
         return is_array(json_decode($value, true));
+    }
+
+    /**
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     *
+     * @return bool
+     */
+    protected function validateDiff($field, $value, array $parameters)
+    {
+        $specifyField = array_shift($parameters);
+
+        return array_key_exists($specifyField, $this->data) && $value !== $this->data[$specifyField];
     }
 
     /**

@@ -27,6 +27,11 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'is_blocked'     => 'no',
             'block_reason'   => '123',
             'channel'        => 'google',
+            'diff_alpha'     => 'hello',
+            'diff_beta'      => 'world',
+            'json'           => '{"a":"b"}',
+            'ip'             => '127.0.0.1',
+            'in'             => 'a',
         ];
         $rules = [
             'data'           => 'size:4',
@@ -43,6 +48,10 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'numeric_string' => 'string|size:6',
             'block_reason'   => 'string|required_with:is_blocked',
             'channel'        => 'required|channel_range',
+            'diff_beta'      => 'diff:diff_alpha',
+            'json'           => 'json',
+            'ip'             => 'ip',
+            'in'             => 'in:a,b,c',
         ];
 
         $self = $this;
