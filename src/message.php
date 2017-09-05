@@ -6,6 +6,7 @@
  */
 return [
     'Required'      => 'is required',
+    'Different'     => 'must be different than another field',
     'Accepted'      => 'must be accepted',
     'Numeric'       => 'must be numeric',
     'Integer'       => 'must be an integer',
