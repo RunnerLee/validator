@@ -439,6 +439,23 @@ class Validator
     }
 
     /**
+     * 指定字段值与某个字段不能相同.
+     *
+     * @param $field
+     * @param $value
+     * @param array $parameters
+     *
+     * @return bool
+     */
+    protected function validateDifferent($field, $value, array $parameters)
+    {
+        $otherField = array_shift($parameters);
+
+        return isset($this->data[$otherField]) && $value != $this->data[$otherField];
+    }
+
+
+    /**
      * @param $field
      * @param $value
      * @param array $parameters
