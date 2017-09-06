@@ -32,6 +32,14 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'json'           => '{"a":"b"}',
             'ip'             => '127.0.0.1',
             'in'             => 'a',
+            'float'          => '1.44',
+            'sub_arr'        => [],
+            'without_alpha'  => 'a',
+            'range_a'          => '1.5',
+            'range_b'          => '1.5',
+            'range_c'          => '1.5',
+            'range_e'          => '1.5',
+            'range_f'          => '1.5',
         ];
         $rules = [
             'data'           => 'size:4',
@@ -52,6 +60,13 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'json'           => 'json',
             'ip'             => 'ip',
             'in'             => 'in:a,b,c',
+            'float'          => 'required_unless:channel,baidu|float|size:1.44|min:1.44|max:1.44',
+            'sub_arr.demo'   => 'size:3',
+            'without_alpha'  => 'required_without:without_beta|required_if:channel,google',
+            'nullable'      => 'nullable',
+            'range_a'          => 'range:1,1.5',
+            'range_b'          => 'range:,1.5',
+            'range_c'          => 'range:1,',
         ];
 
         $self = $this;
@@ -68,6 +83,28 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(true, $validator->validate());
         $this->assertSame($data, $validator->data());
+
+        $data = [
+            'range_a' => '1.4',
+            'range_b' => '1.4',
+        ];
+
+        $validator = new Validator(
+            $data,
+            [
+                'do_not_has_field' => 'required|size:1',
+                'range_a' => 'range',
+                'range_b' => 'range:,',
+            ]
+        );
+
+        $this->assertSame(false, $validator->validate());
+        $this->assertSame($data, $validator->data());
+        $this->assertSame([
+            'do_not_has_field',
+            'range_a',
+            'range_b',
+        ], $validator->fails());
     }
 
     public function testMessage()

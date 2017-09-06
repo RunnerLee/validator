@@ -223,7 +223,11 @@ class Validator
         }
         array_unshift($parameters, "{$field} {$this->messageTemplates[$rule]}");
 
-        return call_user_func_array('sprintf', $parameters);
+        try {
+            return call_user_func_array('sprintf', $parameters);
+        } catch (\Exception $e) {
+            return "{$field} filed check failed";
+        }
     }
 
     /**
@@ -283,7 +287,10 @@ class Validator
      */
     protected function validateSize($field, $value, array $parameters)
     {
-        return $this->getSize($field, $value) === (int) $parameters[0];
+        $size = filter_var($parameters[0], FILTER_VALIDATE_INT);
+        false === $size && $size = filter_var($parameters[0], FILTER_VALIDATE_FLOAT);
+
+        return $this->getSize($field, $value) === $size;
     }
 
     /**
