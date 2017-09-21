@@ -20,6 +20,7 @@ class BaseRuleTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(true, $this->validator->callValidateRule('validateSize', '', 'a', 1));
         $this->assertSame(false, $this->validator->callValidateRule('validateSize', '', 'a', 2));
     }
+
 //
 //
 //    public function testAccept()

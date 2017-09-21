@@ -1,7 +1,7 @@
 <?php
 
-use Runner\Validator\Validator;
 use PHPUnit\Framework\TestCase;
+use Runner\Validator\Validator;
 
 class ValidateTest extends TestCase
 {
