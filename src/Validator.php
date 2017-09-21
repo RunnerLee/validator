@@ -376,7 +376,7 @@ class Validator
      */
     protected function validateRequiredWith($field, $value, array $parameters)
     {
-        return !is_null($value) || !isset($this->data[$parameters[0]]);
+        return !is_null($value) || !array_key_exists($parameters[0], $this->data);
     }
 
     /**
@@ -388,7 +388,7 @@ class Validator
      */
     protected function validateRequiredWithout($field, $value, array $parameters)
     {
-        return !isset($this->data[$parameters[0]]) || !is_null($value);
+        return !is_null($value) || array_key_exists($parameters[0], $this->data);
     }
 
     /**
@@ -402,7 +402,9 @@ class Validator
     {
         $otherField = array_shift($parameters);
 
-        return !is_null($value) || (!isset($this->data[$otherField]) || false === array_search($this->data[$otherField], $parameters));
+        return !is_null($value) || (
+            !array_key_exists($otherField, $this->data) || false === array_search($this->data[$otherField], $parameters)
+        );
     }
 
     /**
@@ -416,7 +418,9 @@ class Validator
     {
         $otherField = array_shift($parameters);
 
-        return !is_null($value) || (!isset($this->data[$otherField]) || false !== array_search($this->data[$otherField], $parameters));
+        return !is_null($value) || (
+            !array_key_exists($otherField, $this->data) || false !== array_search($this->data[$otherField], $parameters)
+        );
     }
 
     /**
