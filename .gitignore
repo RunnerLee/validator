@@ -8,3 +8,4 @@ bin
 /nbproject/*
 *.iml
 .idea
+.php_cs.cache

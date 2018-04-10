@@ -39,6 +39,9 @@ class Validator
      */
     protected $messageTemplates = [];
 
+    /**
+     * @var array
+     */
     protected static $extensions = [];
 
     /**
@@ -54,6 +57,11 @@ class Validator
         $this->messageTemplates = require __DIR__.'/message.php';
     }
 
+    /**
+     * @param $name
+     * @param $callback
+     * @param bool $isForce
+     */
     public static function addExtension($name, $callback, $isForce = false)
     {
         $name = self::formatRuleName($name);
@@ -133,6 +141,10 @@ class Validator
         unset($map);
     }
 
+    /**
+     * @param $name
+     * @return string
+     */
     protected static function formatRuleName($name)
     {
         return implode(
@@ -616,7 +628,7 @@ class Validator
      * @param $field
      * @param $value
      *
-     * @return int|mixed
+     * @return int|float
      */
     protected function getSize($field, $value)
     {
