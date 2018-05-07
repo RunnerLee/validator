@@ -143,6 +143,7 @@ class Validator
 
     /**
      * @param $name
+     *
      * @return string
      */
     protected static function formatRuleName($name)
