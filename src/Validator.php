@@ -212,7 +212,7 @@ class Validator
         if (array_key_exists($rule, self::$extensions)) {
             $callback = self::$extensions[$rule];
             if ($callback instanceof Closure) {
-                $callback = $callback->bindTo($this);
+                $callback = $callback->bindTo($this, $this);
             }
 
             return (bool) call_user_func($callback, $field, $value, $parameters);
