@@ -643,7 +643,7 @@ class Validator
             case false !== $temp = filter_var($value, FILTER_VALIDATE_FLOAT):
                 return $temp;
             default:
-                return strlen($value);
+                return mb_strlen($value);
         }
     }
 }
