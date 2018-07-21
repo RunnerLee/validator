@@ -45,6 +45,11 @@ class Validator
     protected static $extensions = [];
 
     /**
+     * @var array
+     */
+    protected static $extensionMessageTemplates = [];
+
+    /**
      * Validator constructor.
      *
      * @param array $data
@@ -55,6 +60,10 @@ class Validator
         $this->data = $data;
         $this->parseRules($ruleGroups);
         $this->messageTemplates = require __DIR__.'/message.php';
+        $this->messageTemplates = array_merge(
+            $this->messageTemplates,
+            static::$extensionMessageTemplates
+        );
     }
 
     /**
@@ -62,13 +71,15 @@ class Validator
      * @param $callback
      * @param bool $isForce
      */
-    public static function addExtension($name, $callback, $isForce = false)
+    public static function addExtension($name, $callback, $isForce = false, $message = null)
     {
         $name = self::formatRuleName($name);
 
         self::$extensions[$name] = $callback;
 
         $isForce && self::$forceRules[] = $name;
+
+        !empty($message) && (static::$extensionMessageTemplates[$name] = $message);
     }
 
     /**
