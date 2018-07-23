@@ -105,7 +105,7 @@ class Validator
             }
         }
 
-        return !(bool) $this->messages;
+        return 0 === count($this->messages);
     }
 
     /**
