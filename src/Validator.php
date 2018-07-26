@@ -141,11 +141,8 @@ class Validator
         foreach ($ruleGroups as $field => $rules) {
             foreach (explode('|', $rules) as $rule) {
                 list($rule, $parameters) = explode(':', (false === strpos($rule, ':') ? ($rule.':') : $rule), 2);
-                if (isset($map[$rule])) {
-                    $rule = $map[$rule];
-                } else {
-                    $rule = $map[$rule] = self::formatRuleName($rule);
-                }
+                !isset($map[$rule]) && $map[$rule] = self::formatRuleName($rule);
+                $rule = $map[$rule];
                 $this->ruleGroups[$field][$rule] = ('' === $parameters ? [] : explode(',', $parameters));
             }
         }
