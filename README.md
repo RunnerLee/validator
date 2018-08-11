@@ -1,10 +1,6 @@
 # Validator
 
-参考了 Laravel 的验证规则语法, 同时又复制粘贴了 `vlucas/valitron` 的消息模板. 
-
-无任何依赖, 在 FastD 中使用, 可以使用扩展包
-
-[RunnerLee/validation](https://github.com/RunnerLee/validation)
+参考了 Laravel 的验证规则语法, 同时又复制粘贴了 `vlucas/valitron` 的消息模板.
 
 ## 使用
 ```php
