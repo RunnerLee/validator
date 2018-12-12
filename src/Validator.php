@@ -141,7 +141,7 @@ class Validator
     protected function createMessageTemplates(array $messages = [])
     {
         if (empty(self::$initialMessageTemplates)) {
-            self::$initialMessageTemplates = require __DIR__ . '/message.php';
+            self::$initialMessageTemplates = require __DIR__.'/message.php';
         }
 
         $this->messageTemplates = array_merge(self::$initialMessageTemplates, self::$extensionMessageTemplates);
