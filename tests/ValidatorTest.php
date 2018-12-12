@@ -40,6 +40,12 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'range_c' => '1.5',
             'range_e' => '1.5',
             'range_f' => '1.5',
+            'range_g' => '3',
+            'regex' => '123abc',
+            'date_format' => '2018-01-01',
+            'date_before' => '2018-01-01',
+            'date_after' => '2018-01-01',
+            'nullable' => null,
         ];
         $rules = [
             'data' => 'size:4',
@@ -67,14 +73,18 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'range_a' => 'range:1,1.5',
             'range_b' => 'range:,1.5',
             'range_c' => 'range:1,',
+            'range_g' => 'range:1',
+            'regex' => 'regex:#\w+#',
+            'date_format' => 'date_format:Y-m-d',
+            'date_before' => 'date_before:2018-01-02',
+            'date_after' => 'date_after:2017-12-31',
+            'nullable' => 'nullable',
         ];
 
         $self = $this;
 
         Validator::addExtension('channel_range', function ($field, $value, array $parameters = []) use ($self) {
-            $self->assertArrayHasKey('data', $this->data());
-            $self->assertArrayHasKey('url', $this->data());
-            $self->assertArrayHasKey('array', $this->data());
+            $self->assertArrayHasKey($field, $this->data());
 
             return false !== array_search($value, ['google', 'bing']);
         });
@@ -87,6 +97,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $data = [
             'range_a' => '1.4',
             'range_b' => '1.4',
+            'channel_range' => 'baidu',
         ];
 
         $validator = new Validator(
@@ -95,6 +106,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
                 'do_not_has_field' => 'required|size:1',
                 'range_a' => 'range',
                 'range_b' => 'range:,',
+                'channel_range' => 'channel_range',
             ]
         );
 
@@ -104,6 +116,7 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
             'do_not_has_field',
             'range_a',
             'range_b',
+            'channel_range',
         ], $validator->fails());
     }
 

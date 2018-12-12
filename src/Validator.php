@@ -54,22 +54,25 @@ class Validator
      *
      * @param array $data
      * @param array $ruleGroups
+     * @param array $messageTemplates
      */
-    public function __construct(array $data, array $ruleGroups)
+    public function __construct(array $data, array $ruleGroups, array $messageTemplates = [])
     {
         $this->data = $data;
         $this->parseRules($ruleGroups);
         $this->messageTemplates = require __DIR__.'/message.php';
         $this->messageTemplates = array_merge(
             $this->messageTemplates,
-            static::$extensionMessageTemplates
+            static::$extensionMessageTemplates,
+            $messageTemplates
         );
     }
 
     /**
      * @param $name
      * @param $callback
-     * @param bool $isForce
+     * @param bool   $isForce
+     * @param string $message
      */
     public static function addExtension($name, $callback, $isForce = false, $message = null)
     {
