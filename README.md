@@ -1,6 +1,15 @@
-# Validator
+<h1 align="center">Validator</h1>
 
-参考了 Laravel 的验证规则语法, 同时又复制粘贴了 `vlucas/valitron` 的消息模板.
+<p align="center">Lightweight Validation Like Laravel</p>
+
+<p align="center">
+<a href="https://travis-ci.org/RunnerLee/validator"><img src="https://travis-ci.org/RunnerLee/validator.svg?branch=master" /></a>
+<a href="https://scrutinizer-ci.com/g/RunnerLee/validator/?branch=master"><img src="https://scrutinizer-ci.com/g/RunnerLee/validator/badges/coverage.png?b=master" alt="Code Coverage"></a>
+<a href="https://styleci.io/repos/82630238"><img src="https://styleci.io/repos/82630238/shield?branch=master" alt="StyleCI"></a>
+<a href="https://github.com/RunnerLee/validator"><img src="https://poser.pugx.org/runner/validator/v/stable" /></a>
+<a href="http://www.php.net/"><img src="https://img.shields.io/badge/php-%3E%3D5.6-8892BF.svg" /></a>
+<a href="https://github.com/RunnerLee/validator"><img src="https://poser.pugx.org/runner/validator/license" /></a>
+</p>
 
 ## 使用
 ```php
