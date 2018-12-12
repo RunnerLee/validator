@@ -182,4 +182,29 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(true, $validator->validate());
     }
+
+    public function testReplaceMessage()
+    {
+        $validator = new Validator(
+            [
+                'runnerlee' => 'hhh',
+            ],
+            [
+                'runnerlee' => 'integer',
+            ],
+            [
+                'integer' => 'is the most handsome man',
+            ]
+        );
+        $validator->validate();
+
+        $this->assertSame(
+            [
+                'runnerlee' => [
+                    'Integer' => 'runnerlee is the most handsome man',
+                ],
+            ],
+            $validator->messages()
+        );
+    }
 }

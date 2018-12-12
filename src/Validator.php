@@ -50,6 +50,11 @@ class Validator
     protected static $extensionMessageTemplates = [];
 
     /**
+     * @var array
+     */
+    protected static $initialMessageTemplates = [];
+
+    /**
      * Validator constructor.
      *
      * @param array $data
@@ -60,12 +65,7 @@ class Validator
     {
         $this->data = $data;
         $this->parseRules($ruleGroups);
-        $this->messageTemplates = require __DIR__.'/message.php';
-        $this->messageTemplates = array_merge(
-            $this->messageTemplates,
-            static::$extensionMessageTemplates,
-            $messageTemplates
-        );
+        $this->createMessageTemplates($messageTemplates);
     }
 
     /**
@@ -133,6 +133,22 @@ class Validator
     public function data()
     {
         return $this->data;
+    }
+
+    /**
+     * @param array $messages
+     */
+    protected function createMessageTemplates(array $messages = [])
+    {
+        if (empty(self::$initialMessageTemplates)) {
+            self::$initialMessageTemplates = require __DIR__ . '/message.php';
+        }
+
+        $this->messageTemplates = array_merge(self::$initialMessageTemplates, self::$extensionMessageTemplates);
+
+        foreach ($messages as $rule => $message) {
+            $this->messageTemplates[self::formatRuleName($rule)] = $message;
+        }
     }
 
     /**
