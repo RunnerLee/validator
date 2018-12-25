@@ -6,6 +6,12 @@ filter:
   dependency_paths:
     - 'vendor/'
 
+
+build:
+  environment:
+    php:
+      version: '7.1'
+
 checks:
   php:
     remove_extra_empty_lines: true
