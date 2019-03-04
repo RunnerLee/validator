@@ -7,6 +7,7 @@
 
 namespace Runner\Validator;
 
+use BadMethodCallException;
 use Runner\Validator\Concerns\MessagesAttributes;
 use Runner\Validator\Concerns\ValidatesAttributes;
 
@@ -88,14 +89,13 @@ class Validator
             if ($this->hasField($field)) {
                 $value = $this->getField($field);
                 foreach ($rules as $rule => $parameters) {
-                    if (!$this->runValidateRule($field, $value, $rule, $parameters)) {
+                    if (!$this->runValidateRule($rule, $field, $value, $parameters)) {
                         $this->messages[$field][$rule] = $this->buildMessage($rule, $field, $parameters);
                     }
                 }
             } elseif ($forceRules = array_intersect(self::$forceRules, array_keys($rules))) {
-                $value = null;
                 foreach ($forceRules as $rule) {
-                    if (!$this->runValidateRule($field, null, $rule, $rules[$rule])) {
+                    if (!$this->runValidateRule($rule, $field, null, $rules[$rule])) {
                         $this->messages[$field][$rule] = $this->buildMessage($rule, $field, $rules[$rule]);
                     }
                 }
@@ -143,7 +143,6 @@ class Validator
                 $this->ruleGroups[$field][$rule] = ('' === $parameters ? [] : explode(',', $parameters));
             }
         }
-        unset($map);
     }
 
     /**
@@ -213,10 +212,21 @@ class Validator
      *
      * @return bool
      */
-    protected function runValidateRule($field, $value, $rule, array $parameters = [])
+    protected function runValidateRule($rule, $field, $value, array $parameters = [])
     {
         $callback = array_key_exists($rule, self::$extensions) ? self::$extensions[$rule] : [$this, "validate{$rule}"];
 
         return (bool) call_user_func($callback, $field, $value, $parameters, $this);
+    }
+
+    public function __call($method, $arguments)
+    {
+        $rule = self::formatRuleName(substr($method, 8));
+
+        if (!isset(self::$extensions[$rule])) {
+            throw new BadMethodCallException(sprintf('Method %s::%s does not exists', static::class, $method));
+        }
+
+        return $this->runValidateRule($rule, ...$arguments);
     }
 }

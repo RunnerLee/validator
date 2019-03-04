@@ -89,6 +89,32 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testAddExtension()
+    {
+        Validator::addExtension('runner', function () {
+            return true;
+        });
+
+        $data = [
+            'a' => 'string',
+        ];
+
+        $validator = new Validator($data, [
+            'a' => 'runner'
+        ]);
+
+        $this->assertSame(true, $validator->validate());
+
+        $this->assertSame(true, $validator->validateRunner('a', 'a', []));
+
+        $validator = new Validator($data, [
+            'a' => 'demo',
+        ]);
+
+        $this->expectException(BadMethodCallException::class);
+        $validator->validate();
+    }
+
     public function testReplaceMessage()
     {
         $validator = new Validator(
