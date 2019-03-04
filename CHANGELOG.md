@@ -10,3 +10,7 @@
 - 拆分 validate 及消息处理为 trait
 - extend 的 callback 类作用域取消绑定到 Validator 示例. validate 函数参数增加传入 Validator 实例
 - validate 从 protected 改为 publish
+
+## [v1.0.1] - 2019-03-04
+### Added
+- 增加支持通过魔术方法调用扩展规则
